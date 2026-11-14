@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Quantum Escape: The Warden's Facility</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div id="game-container">
+    <div id="viewport">
+      <!-- Background Scene -->
+      <img id="scene-bg" src="assets/s1.jpg" alt="Detention Cell Q-0">
+
+      <!-- Dynamic Visual Effects Canvas -->
+      <canvas id="fx-canvas"></canvas>
+
+      <!-- Door Breached Glow Overlay -->
+      <div id="door-breached-glow"></div>
+
+      <!-- Atmospheric Overlays -->
+      <div class="vignette-overlay"></div>
+      <div class="scanlines"></div>
+
+      <!-- Interactive Hotspots -->
+      <div id="hotspot-terminal" class="hotspot" title="Inspect Terminal X">
+        <div class="beacon-ring">
+          <div class="beacon-dot"></div>
+        </div>
+        <div class="hotspot-label">⚡ TERMINAL X</div>
+      </div>
+
+      <div id="hotspot-door" class="hotspot" title="Inspect Blast Door">
+        <div class="beacon-ring">
+          <div class="beacon-dot"></div>
+        </div>
+        <div class="hotspot-label">🔒 CELL BLAST DOOR</div>
+      </div>
+
+      <!-- Eyelids Awakening Overlay -->
+      <div id="eyelids-overlay">
+        <div class="eyelid-top"></div>
+        <div class="eyelid-bottom"></div>
+        <div id="awakening-caption">You wake up just now...</div>
+      </div>
+
+      <!-- Skip Awakening Button -->
+      <button id="skip-awakening-btn" class="skip-btn" style="display: none;">SKIP INTRO ⏭</button>
+
+      <!-- Heads-Up Display (HUD) -->
+      <div id="hud-overlay">
+        <div class="hud-top-bar">
+          <div class="hud-group">
+            <div class="hud-badge">
+              <strong>ROOM:</strong> CELL 0
+            </div>
+            <div class="hud-badge">
+              <strong>X STATUS:</strong> <span style="color: #ffb700;">LOW POWER</span>
+            </div>
+          </div>
+
+          <div id="status-banner">
+            <span class="pulse-dot"></span> WAKING UP...
+          </div>
+
+          <div class="hud-controls">
+            <button id="sound-toggle" class="hud-icon-btn" title="Toggle Sound">🔊</button>
+            <button id="fullscreen-toggle" class="hud-icon-btn" title="Toggle Fullscreen">⛶</button>
+          </div>
+        </div>
+
+        <!-- Notification Toast -->
+        <div id="notification-toast">ALERT: SIGNAL DETECTED</div>
+
+        <!-- Holographic Dialogue Box -->
+        <div id="dialogue-box">
+          <div class="dialogue-header">
+            <div class="speaker-container">
+              <div class="quantum-avatar">
+                <div class="quantum-ring"></div>
+                <div class="quantum-orb"></div>
+              </div>
+              <span id="dialogue-speaker">TERMINAL X</span>
+            </div>
+            <span class="dialogue-status">ONLINE</span>
+          </div>
+
+          <div id="dialogue-text"></div>
+
+          <div id="dialogue-choices"></div>
+
+          <div class="dialogue-footer">
+            <button id="dialogue-next-btn" class="action-btn">CONTINUE ▶</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Start / Standby Screen -->
+    <div id="standby-screen">
+      <div class="standby-bg-wrapper">
+        <img id="standby-bg" src="assets/s0.jpg" alt="The Warden's Facility Gate">
+        <div class="standby-overlay"></div>
+      </div>
+      <div class="title-container">
+        <div class="game-eyebrow">Interactive Quantum Adventure</div>
+        <h1 class="game-title">Quantum Escape</h1>
+        <p class="game-subtitle">THE WARDEN'S FACILITY</p>
+
+        <!-- Detailed Mission Briefing Card -->
+        <div class="briefing-card">
+          <div class="briefing-header">
+            <div class="briefing-tag">
+              <span class="pulse-dot"></span> MISSION BRIEFING
+            </div>
+            <div class="briefing-status">STATUS: CRITICAL LOCKDOWN</div>
+          </div>
+
+          <div class="briefing-section">
+            <div class="briefing-label"><span class="icon">🔒</span> The Premise</div>
+            <p class="briefing-text">
+              You awaken in a locked cell inside a high-tech facility run by the <strong>Quantum Warden</strong>. Beside you, a damaged terminal flickers to life: it is <strong>X</strong>, the facility's quantum computer. The Warden has disconnected X's core algorithm modules and locked the exit.
+            </p>
+          </div>
+
+          <div class="briefing-section">
+            <div class="briefing-label"><span class="icon">⚡</span> How X Helps</div>
+            <p class="briefing-text">
+              X's main core is housed in <strong>Chamber 3 (The Central Chamber)</strong>, but its emergency terminal network reaches your cell and the corridor. Because X is partially offline, you must solve the first two chambers using basic quantum hardware before you can physically reach X's core, reboot it, and use its full power to defeat the Warden's final lock in <strong>Chamber 4</strong>.
+            </p>
+          </div>
+
+          <!-- 4-Chamber Escape Route -->
+          <div class="chamber-path-wrapper">
+            <div class="chamber-path-title">FACILITY ESCAPE ROUTE:</div>
+            <div class="chamber-path-grid">
+              <div class="chamber-chip active">
+                <span class="chip-num">01</span>
+                <span class="chip-name">Superposition</span>
+              </div>
+              <div class="chip-arrow">→</div>
+              <div class="chamber-chip">
+                <span class="chip-num">02</span>
+                <span class="chip-name">Spy's Corridor</span>
+              </div>
+              <div class="chip-arrow">→</div>
+              <div class="chamber-chip">
+                <span class="chip-num">03</span>
+                <span class="chip-name">X's Core Reboot</span>
+              </div>
+              <div class="chip-arrow">→</div>
+              <div class="chamber-chip">
+                <span class="chip-num">04</span>
+                <span class="chip-name">Final Card Lock</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button id="start-btn" class="start-pulse-btn">
+          ENTER CELL & START GAME ▶
+        </button>
+      </div>
+    </div>
+
+    <!-- Transition Screen & Chamber 1 Modal -->
+    <div id="transition-screen"></div>
+    <div id="chamber1-modal">
+      <div class="modal-chamber-tag">Next Room</div>
+      <h2 class="modal-title">Chamber 1: The Superposition Chamber</h2>
+      <div class="modal-desc">
+        <p><strong>The Magic Box:</strong></p>
+        <p>Inside this room is a sealed box. The ball started on the <strong>LEFT</strong>, but the Warden gave it one quantum shake.</p>
+        <p>Now the ball is in a <strong>50% Left and 50% Right</strong> state at the same time!</p>
+        <br>
+        <p>The door only opens if the ball is <strong>100% on the LEFT</strong>. You cannot guess by luck. You must use a second quantum shake to bring it back to the left!</p>
+      </div>
+      <div class="modal-actions">
+        <button id="enter-chamber-1-btn" class="action-btn">ENTER CHAMBER 1 ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/audio.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/story.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
