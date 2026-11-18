@@ -282,6 +282,170 @@ class QuantumAudio {
     clankOsc.start(now + 0.1);
     clankOsc.stop(now + 0.5);
   }
+
+  // Quantum shake: rising sweep with a shimmering upper harmonic
+  playQuantumShake() {
+    if (!this.ctx || this.isMuted) return;
+    const now = this.ctx.currentTime;
+
+    const osc = this.ctx.createOscillator();
+    const osc2 = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    const filter = this.ctx.createBiquadFilter();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(160, now);
+    osc.frequency.exponentialRampToValueAtTime(560, now + 0.42);
+    osc.frequency.exponentialRampToValueAtTime(300, now + 0.8);
+
+    osc2.type = 'triangle';
+    osc2.frequency.setValueAtTime(320, now);
+    osc2.frequency.exponentialRampToValueAtTime(1120, now + 0.42);
+    osc2.frequency.exponentialRampToValueAtTime(600, now + 0.8);
+    osc2.detune.setValueAtTime(18, now);
+
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(500, now);
+    filter.frequency.exponentialRampToValueAtTime(2200, now + 0.45);
+    filter.Q.setValueAtTime(3.2, now);
+
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.linearRampToValueAtTime(0.16, now + 0.12);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.85);
+
+    osc.connect(filter);
+    osc2.connect(filter);
+    filter.connect(gain);
+    gain.connect(this.masterGain);
+
+    osc.start(now);
+    osc2.start(now);
+    osc.stop(now + 0.9);
+    osc2.stop(now + 0.9);
+  }
+
+  // Observation / collapse: crisp chime plus a mechanical tick
+  playCollapse() {
+    if (!this.ctx || this.isMuted) return;
+    const now = this.ctx.currentTime;
+
+    [1320, 1760, 2640].forEach((freq, i) => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      const t = now + i * 0.035;
+      osc.type = i === 2 ? 'sine' : 'triangle';
+      osc.frequency.setValueAtTime(freq, t);
+      gain.gain.setValueAtTime(0.0001, t);
+      gain.gain.linearRampToValueAtTime(0.09 / (i + 1), t + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.34);
+      osc.connect(gain);
+      gain.connect(this.masterGain);
+      osc.start(t);
+      osc.stop(t + 0.36);
+    });
+
+    const thud = this.ctx.createOscillator();
+    const thudGain = this.ctx.createGain();
+    thud.type = 'sine';
+    thud.frequency.setValueAtTime(180, now);
+    thud.frequency.exponentialRampToValueAtTime(55, now + 0.22);
+    thudGain.gain.setValueAtTime(0.22, now);
+    thudGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.26);
+    thud.connect(thudGain);
+    thudGain.connect(this.masterGain);
+    thud.start(now);
+    thud.stop(now + 0.28);
+  }
+
+  // Low denial buzz for a failed procedure
+  playFailBuzz() {
+    if (!this.ctx || this.isMuted) return;
+    const now = this.ctx.currentTime;
+
+    [92, 98].forEach((freq) => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      const filter = this.ctx.createBiquadFilter();
+
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(freq, now);
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(420, now);
+
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(0.09, now + 0.02);
+      gain.gain.setValueAtTime(0.09, now + 0.28);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(this.masterGain);
+      osc.start(now);
+      osc.stop(now + 0.52);
+    });
+  }
+
+  // Bright confirmation arpeggio for solving a chamber
+  playSuccessArpeggio() {
+    if (!this.ctx || this.isMuted) return;
+    const now = this.ctx.currentTime;
+    const notes = [523.25, 659.25, 783.99, 1046.5];
+
+    notes.forEach((freq, i) => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      const t = now + i * 0.11;
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, t);
+      gain.gain.setValueAtTime(0.0001, t);
+      gain.gain.linearRampToValueAtTime(0.11, t + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
+      osc.connect(gain);
+      gain.connect(this.masterGain);
+      osc.start(t);
+      osc.stop(t + 0.58);
+    });
+  }
+
+  // Slow cinematic swell used between prologue scenes
+  playSceneSwell() {
+    if (!this.ctx || this.isMuted) return;
+    const now = this.ctx.currentTime;
+
+    const osc = this.ctx.createOscillator();
+    const osc2 = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    const filter = this.ctx.createBiquadFilter();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(58, now);
+    osc.frequency.linearRampToValueAtTime(82, now + 2.2);
+
+    osc2.type = 'triangle';
+    osc2.frequency.setValueAtTime(116, now);
+    osc2.frequency.linearRampToValueAtTime(164, now + 2.2);
+    osc2.detune.setValueAtTime(-9, now);
+
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(320, now);
+    filter.frequency.linearRampToValueAtTime(900, now + 1.4);
+    filter.frequency.linearRampToValueAtTime(280, now + 3.0);
+
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.linearRampToValueAtTime(0.07, now + 0.9);
+    gain.gain.linearRampToValueAtTime(0.055, now + 2.0);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 3.2);
+
+    osc.connect(filter);
+    osc2.connect(filter);
+    filter.connect(gain);
+    gain.connect(this.masterGain);
+
+    osc.start(now);
+    osc2.start(now);
+    osc.stop(now + 3.3);
+    osc2.stop(now + 3.3);
+  }
 }
 
 window.soundEngine = new QuantumAudio();

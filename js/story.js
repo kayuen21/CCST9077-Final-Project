@@ -24,6 +24,7 @@ class IntroController {
     this.currentFullText = '';
     this.dialogueQueue = [];
     this.currentDialogueIndex = 0;
+    this.isTransitioning = false;
 
     this.bindEvents();
   }
@@ -111,6 +112,7 @@ class IntroController {
   startAwakening() {
     if (window.soundEngine) {
       window.soundEngine.init();
+      window.soundEngine.resume();
       window.soundEngine.playBootChime();
     }
 
@@ -125,7 +127,7 @@ class IntroController {
     if (caption) {
       setTimeout(() => {
         caption.classList.add('visible');
-      }, 400);
+      }, 600);
     }
     this.setStatus('YOU WAKE UP JUST NOW...');
 
@@ -223,22 +225,22 @@ class IntroController {
     this.dialogueQueue = [
       {
         speaker: 'TERMINAL X',
-        text: 'Hey! Can you hear me? Wake up... Take a deep breath. You are safe for now.',
+        text: 'Hey! Can you hear me? Wake up... Easy. The Warden\'s drones took your gear and left you in a holding cell. That was about an hour ago.',
         btnText: 'CONTINUE ▶'
       },
       {
         speaker: 'TERMINAL X',
-        text: 'My name is X. I am the quantum computer that runs this facility. But right now, the entire sector is locked down, and only this small terminal in your cell has power.',
+        text: 'My name is X. I run this facility — or I did, until the Warden took my network. Only this emergency terminal still has power.',
         btnText: 'CONTINUE ▶'
       },
       {
         speaker: 'TERMINAL X',
-        text: 'The Quantum Warden trapped us here. The Warden pulled out my 3 core algorithm modules and locked every corridor with quantum puzzles—like superposition and wave interference. Normal keys will never work on these doors.',
+        text: 'The Warden is not from Earth. It arrived on a signal, ahead of an invasion fleet. It is not here to break our machines. It is using me — my own systems — to freeze the world outside.',
         btnText: 'CONTINUE ▶'
       },
       {
         speaker: 'TERMINAL X',
-        text: 'That is where quantum computing helps us escape. Normal computers test one possibility at a time. But a quantum computer can explore many paths all at once and cancel out wrong answers! I will guide you through each puzzle so we can beat the Warden\'s locks.',
+        text: 'It physically pulled three of my core algorithm modules, and it has locked every corridor behind quantum puzzles. Ordinary access codes will never work on these doors. Quantum laws will — and that is where I can help you.',
         btnText: 'ASK: "CAN YOU OPEN THIS CELL DOOR?" ▶'
       },
       {
@@ -248,7 +250,7 @@ class IntroController {
       },
       {
         speaker: 'TERMINAL X',
-        text: 'Yes! Look at the glowing lines on your floor. They connect this terminal directly to the door lock. I will discharge my remaining energy through the floor wires right now to blast the lock open. Stand back!',
+        text: 'Yes! Look at the glowing lines on your floor. They connect this terminal directly to the door lock. I will discharge my remaining energy through the floor wires right now to blast the latch open. Stand back!',
         btnText: 'BLAST THE LOCK! ⚡',
         action: () => this.triggerCellDoorBreach()
       }
@@ -374,6 +376,11 @@ class IntroController {
   }
 
   transitionToChamber1() {
+    // Guard: the door hotspot, the dialogue button listener and its onclick
+    // can all fire for the same click.
+    if (this.isTransitioning) return;
+    this.isTransitioning = true;
+
     if (window.soundEngine) {
       window.soundEngine.playClick();
     }

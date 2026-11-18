@@ -15,6 +15,33 @@
 </head>
 <body>
 
+  <!-- ============================================================
+       PROLOGUE — four cinematic scenes before the title screen
+       ============================================================ -->
+  <div id="prologue">
+    <div class="prologue-stage">
+      <img class="prologue-bg" id="pro-bg-a" src="assets/story1.jpg" alt="">
+      <img class="prologue-bg" id="pro-bg-b" src="" alt="">
+
+      <div class="prologue-scrim"></div>
+      <div class="prologue-tint"></div>
+      <div class="prologue-vignette"></div>
+      <div class="prologue-scanlines"></div>
+
+      <div class="prologue-topbar">
+        <div class="prologue-chapter" id="pro-chapter">CHAPTER 01 · 2050</div>
+        <div class="prologue-topbar-right">
+          <div class="prologue-dots" id="pro-dots"></div>
+          <button class="prologue-skip" id="pro-skip">SKIP PROLOGUE ⏭</button>
+        </div>
+      </div>
+
+      <div class="prologue-content" id="pro-content"></div>
+
+      <button class="prologue-next" id="pro-next">CONTINUE ▶</button>
+    </div>
+  </div>
+
   <div id="game-container">
     <div id="viewport">
       <!-- Background Scene -->
@@ -104,6 +131,114 @@
       </div>
     </div>
 
+    <!-- ============================================================
+         CHAMBER 1 : THE SUPERPOSITION CHAMBER
+         ============================================================ -->
+    <div id="chamber1-scene">
+      <div id="c1-stage">
+        <img id="c1-bg" src="assets/s2.jpg" alt="The Superposition Chamber">
+        <canvas id="c1-canvas"></canvas>
+
+        <div id="c1-door-glow"></div>
+
+        <div class="vignette-overlay"></div>
+        <div class="scanlines"></div>
+
+        <!-- HUD -->
+        <div class="c1-hud">
+          <div class="hud-top-bar">
+            <div class="hud-group">
+              <div class="hud-badge"><strong>CHAMBER:</strong> 1 / 4</div>
+              <div class="hud-badge"><strong>X:</strong> <span class="c1-online">ONLINE</span></div>
+            </div>
+            <div id="c1-status" class="status-banner-inline">
+              <span class="pulse-dot"></span> ENTERING CHAMBER...
+            </div>
+            <div class="hud-controls">
+              <button id="c1-sound-toggle" class="hud-icon-btn" title="Toggle Sound">🔊</button>
+              <button id="c1-fs-toggle" class="hud-icon-btn" title="Toggle Fullscreen">⛶</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wall inscription -->
+        <div id="c1-inscription">
+          <div class="plaque-title" id="c1-plaque-title">CHAMBER 1 // DIRECTIVE</div>
+          <p class="plaque-body" id="c1-plaque-body">
+            The door opens only if the ball is found on the <strong>LEFT</strong>.
+          </p>
+          <p class="plaque-accent" id="c1-plaque-accent">
+            Find a method that guarantees success. Do not rely on luck.
+          </p>
+        </div>
+
+        <!-- Puzzle console -->
+        <div id="c1-console">
+          <div class="console-top">
+            <div class="lock-indicator">
+              <span class="lock-word">LOCK</span>
+              <span class="lock-num" id="c1-lock-num">1</span>
+              <span class="lock-total">/ 3</span>
+            </div>
+
+            <div class="power-meter">
+              <span class="power-word">X POWER</span>
+              <div class="pips" id="c1-pips"></div>
+            </div>
+
+            <div class="door-locks" id="c1-door-locks">
+              <div class="dl-seg" data-lock="1"></div>
+              <div class="dl-seg" data-lock="2"></div>
+              <div class="dl-seg" data-lock="3"></div>
+            </div>
+          </div>
+
+          <div class="rack-readout">
+            <span class="rack-readout-label">In two places at once</span>
+            <span class="rack-readout-value" id="c1-uncertain">—</span>
+          </div>
+
+          <div class="rack" id="c1-rack"></div>
+
+          <div class="build-controls">
+            <button class="c1-action-btn shake" id="c1-shake-all">
+              <span class="btn-icon">〰</span> SHAKE ALL BOXES
+            </button>
+            <span class="action-hint">— or click a single box</span>
+            <button class="c1-run-btn" id="c1-open">◉ OPEN THE BOXES</button>
+          </div>
+        </div>
+
+        <!-- Chamber dialogue -->
+        <div id="c1-dialogue">
+          <div class="dialogue-header">
+            <div class="speaker-container">
+              <div class="quantum-avatar">
+                <div class="quantum-ring"></div>
+                <div class="quantum-orb"></div>
+              </div>
+              <span id="c1-speaker">TERMINAL X</span>
+            </div>
+            <span class="dialogue-status">CHAMBER 1 LINK</span>
+          </div>
+          <div id="c1-text"></div>
+          <div class="dialogue-footer">
+            <button id="c1-next" class="action-btn">CONTINUE ▶</button>
+          </div>
+        </div>
+
+        <!-- Result overlay -->
+        <div id="c1-overlay">
+          <div class="c1-overlay-card" id="c1-overlay-card">
+            <div class="overlay-tag" id="c1-overlay-tag">RESULT</div>
+            <h2 class="overlay-title" id="c1-overlay-title"></h2>
+            <div class="overlay-body" id="c1-overlay-body"></div>
+            <div class="overlay-actions" id="c1-overlay-actions"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Start / Standby Screen -->
     <div id="standby-screen">
       <div class="standby-bg-wrapper">
@@ -113,7 +248,7 @@
       <div class="title-container">
         <div class="game-eyebrow">Interactive Quantum Adventure</div>
         <h1 class="game-title">Quantum Escape</h1>
-        <p class="game-subtitle">THE WARDEN'S FACILITY</p>
+        <p class="game-subtitle">X CENTRAL FACILITY · UNDER WARDEN CONTROL</p>
 
         <!-- Detailed Mission Briefing Card -->
         <div class="briefing-card">
@@ -127,7 +262,7 @@
           <div class="briefing-section">
             <div class="briefing-label"><span class="icon">🔒</span> The Premise</div>
             <p class="briefing-text">
-              You awaken in a locked cell inside a high-tech facility run by the <strong>Quantum Warden</strong>. Beside you, a damaged terminal flickers to life: it is <strong>X</strong>, the facility's quantum computer. The Warden has disconnected X's core algorithm modules and locked the exit.
+              You wake in a holding cell inside X's central facility, seized by the <strong>Warden</strong> — an alien intelligence that arrived ahead of an invasion fleet. Its drones took your toolkit and left you here. On the wall, a damaged terminal flickers to life: it is <strong>X</strong>, the quantum computer that once ran the world's infrastructure. The Warden has pulled three of its core algorithm modules and locked every exit.
             </p>
           </div>
 
@@ -177,11 +312,13 @@
       <div class="modal-chamber-tag">Next Room</div>
       <h2 class="modal-title">Chamber 1: The Superposition Chamber</h2>
       <div class="modal-desc">
-        <p><strong>The Magic Box:</strong></p>
-        <p>Inside this room is a sealed box. The ball started on the <strong>LEFT</strong>, but the Warden gave it one quantum shake.</p>
-        <p>Now the ball is in a <strong>50% Left and 50% Right</strong> state at the same time!</p>
+        <p><strong>The Magic Boxes</strong></p>
+        <p>Sealed boxes float above a pedestal. Each holds one ball, found on the <strong>LEFT</strong> or the <strong>RIGHT</strong> when the box is opened.</p>
+        <p>Every ball started on the LEFT. Then the machine applied quantum shakes, and the boxes have stayed shut ever since.</p>
         <br>
-        <p>The door only opens if the ball is <strong>100% on the LEFT</strong>. You cannot guess by luck. You must use a second quantum shake to bring it back to the left!</p>
+        <p>A ball that has settled is <strong>visible on the LEFT</strong>. A ball in superposition has no position at all, so its box shows only a smear.</p>
+        <p>Shaking a settled box puts it back into superposition. The door opens only when <strong>every ball has settled</strong>.</p>
+        <p>Three locks stand between you and the corridor, and X has only so much power.</p>
       </div>
       <div class="modal-actions">
         <button id="enter-chamber-1-btn" class="action-btn">ENTER CHAMBER 1 ▶</button>
@@ -192,7 +329,9 @@
   <!-- Scripts -->
   <script src="js/audio.js"></script>
   <script src="js/particles.js"></script>
+  <script src="js/prologue.js"></script>
   <script src="js/story.js"></script>
+  <script src="js/chamber1.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
